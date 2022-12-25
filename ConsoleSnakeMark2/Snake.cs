@@ -4,24 +4,54 @@ using System.Text;
 
 namespace ConsoleSnakeMark2 {
     public class Snake {
+        static bool IsOpposite(Direction direction1, Direction direction2) {
+            switch (direction1) {
+                case Direction.Up:
+                    if (direction2 == Direction.Down)
+                        return true;
+                    break;
+                case Direction.Down:
+                    if (direction2 == Direction.Up)
+                        return true;
+                    break;
+                case Direction.Left:
+                    if (direction2 == Direction.Right)
+                        return true;
+                    break;
+                case Direction.Right:
+                    if (direction2 == Direction.Left)
+                        return true;
+                    break;
+            }
+            return false;
+        }
+
         readonly LinkedList<SnakePoint> snake;
+        Direction currentDirection;
         int ateFood = 0;
         int leftFood = 0;
 
         SnakePoint HeadSnakePoint => snake.First.Value;
         Point Tail => snake.Last.Value;
         bool IsHungry => leftFood == 0;
-        SnakePoint NewHead => HeadSnakePoint.GetNextSnakePoint();       
-        public Point NextTurnHead => null;
+        SnakePoint NewHead => HeadSnakePoint.GetNextSnakePoint(currentDirection);       
+        public Point NextTurnHead => NewHead;
         public int Length => snake.Count;
         public delegate void UpdateHeadPositionHandler(Point newHead);
         public event UpdateHeadPositionHandler UpdateHeadPosition;
-        public delegate void UpdateTailPositionHandler(Point oldTail);
+        public delegate void UpdateTailPositionHandler(Point newTail);
         public event UpdateTailPositionHandler UpdateTailPosition;
+        public delegate void UpdateTailStateHandler(bool extendingNextTurn);
+        public event UpdateTailStateHandler UpdateTailState;
 
         public Snake(Point initialHead) {
             snake = new LinkedList<SnakePoint>();
             snake.AddFirst(new SnakePoint(initialHead));
+        }
+
+        public void SetNewHeadDirection(Direction direction) {
+            if ((currentDirection != direction) && !IsOpposite(currentDirection, direction))
+                currentDirection = direction;
         }
 
         public void Eat(int foodValue) {
@@ -34,11 +64,12 @@ namespace ConsoleSnakeMark2 {
             UpdateHeadPosition(newHead);
             snake.AddFirst(newHead);
             if (IsHungry) {
-                UpdateTailPosition(Tail);
                 snake.RemoveLast();
+                UpdateTailPosition(Tail);
             }
             else {
                 leftFood--;
+                UpdateTailState(IsHungry);
             }
         }
     }

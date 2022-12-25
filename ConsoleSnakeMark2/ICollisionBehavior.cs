@@ -21,7 +21,7 @@
         }
         
         public override void Execute() {
-
+            snake.Move();
         }
     }
 
@@ -42,7 +42,9 @@
         }
         
         public override void Execute() {
-
+            snake.Eat(value);
+            snake.Move();
+            //grid.AddFood();
         }
     }
 
