@@ -31,10 +31,13 @@ namespace ConsoleSnakeMark2 {
         int ateFood = 0;
         int leftFood = 0;
 
-        SnakePoint HeadSnakePoint => snake.First.Value;
+        SnakePoint Head { 
+            get => snake.First.Value;
+            set => snake.First.Value = value;
+        }
         Point Tail => snake.Last.Value;
         bool IsHungry => leftFood == 0;
-        SnakePoint NewHead => HeadSnakePoint.GetNextSnakePoint(currentDirection);       
+        SnakePoint NewHead => Head.GetNextSnakePoint(currentDirection);       
         public Point NextTurnHead => NewHead;
         public int Length => snake.Count;
         public delegate void UpdateHeadPositionHandler(Point newHead);
@@ -52,6 +55,10 @@ namespace ConsoleSnakeMark2 {
         public void SetNewHeadDirection(Direction direction) {
             if ((currentDirection != direction) && !IsOpposite(currentDirection, direction))
                 currentDirection = direction;
+        }
+
+        public void TeleportSnakeHead(Point destination) {
+            Head = new SnakePoint(destination.X, destination.Y);
         }
 
         public void Eat(int foodValue) {

@@ -4,11 +4,15 @@ using System.Text;
 
 namespace ConsoleSnakeMark2 {
     public class GameLogic {
+        const int smallFoodValue = 1;
+        
         readonly Snake snake;
         readonly GameGrid grid;
         Direction currentSnakeDirection = Direction.Right;
+        bool gameOver = false;
 
-        public bool IsEnd => false;
+        bool IsWin => grid.Capacity == snake.Length;
+        public bool IsEnd => IsWin || gameOver;
         public Direction CurrentSnakeDirection {
             get => currentSnakeDirection;
             set {
@@ -25,10 +29,28 @@ namespace ConsoleSnakeMark2 {
             snake.UpdateTailState += new Snake.UpdateTailStateHandler((b) => grid.UpdateSnakeTailState(b));
         }
 
+        public void StopGame() {
+            gameOver = true;
+        }
+
+        public void MoveSnake() {
+            snake.Move();
+        }
+
+        public void EatFood(int foodValue) {
+            snake.Eat(foodValue);
+        }
+
+        public void SpawnFood() {
+            grid.AddRandomFood(smallFoodValue);
+        }
+
         public void Iterate() {
-            snake.SetNewHeadDirection(currentSnakeDirection);
-            CollisionBehaviorFactory factory = grid[snake.NextTurnHead].GetCollisionBehaviorFactory();
-            factory.Create(grid, snake).Execute();
+            if (!IsEnd) {
+                snake.SetNewHeadDirection(currentSnakeDirection);
+                CollisionBehaviorFactory factory = grid[snake.NextTurnHead].GetCollisionBehaviorFactory();
+                factory.Create(this).Execute();
+            }
         }
     }
 }

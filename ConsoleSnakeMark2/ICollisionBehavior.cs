@@ -4,12 +4,10 @@
     }
 
     public abstract class CollisionBehaviorBase : ICollisionBehavior {
-        protected readonly GameGrid grid;
-        protected readonly Snake snake;
+        protected readonly GameLogic logic;
 
-        protected CollisionBehaviorBase(GameGrid gameGrid, Snake snake) {
-            grid = gameGrid;
-            this.snake = snake;
+        protected CollisionBehaviorBase(GameLogic gameLogic) {
+            logic = gameLogic;
         }
 
         public abstract void Execute();
@@ -17,34 +15,34 @@
 
     public class ContinueBehavior : CollisionBehaviorBase {
         
-        public ContinueBehavior(GameGrid gameGrid, Snake snake) : base(gameGrid, snake) {
+        public ContinueBehavior(GameLogic gameLogic) : base(gameLogic) {
         }
         
         public override void Execute() {
-            snake.Move();
+            logic.MoveSnake();
         }
     }
 
     public class EndGameBehavior : CollisionBehaviorBase {
-        public EndGameBehavior(GameGrid gameGrid, Snake snake) : base(gameGrid, snake) {
+        public EndGameBehavior(GameLogic gameLogic) : base(gameLogic) {
         }
         
         public override void Execute() {
-
+            logic.StopGame();
         }
     }
 
     public class ExtendSnakeBehavior : CollisionBehaviorBase {
         readonly int value;
         
-        public ExtendSnakeBehavior(GameGrid gameGrid, Snake snake, int extendValue) : base(gameGrid, snake) {
+        public ExtendSnakeBehavior(GameLogic gameLogic, int extendValue) : base(gameLogic) {
             value = extendValue;
         }
         
         public override void Execute() {
-            snake.Eat(value);
-            snake.Move();
-            //grid.AddFood();
+            logic.EatFood(value);
+            logic.MoveSnake();
+            logic.SpawnFood();
         }
     }
 
@@ -61,16 +59,16 @@
             extendValue = extendSnakeValue;
         }
 
-        public ICollisionBehavior Create(GameGrid gameGrid, Snake snake) {
+        public ICollisionBehavior Create(GameLogic gameLogic) {
             switch (type) {
                 case CollisionBehaviorType.Continue:
-                    return new ContinueBehavior(gameGrid, snake);
+                    return new ContinueBehavior(gameLogic);
                 case CollisionBehaviorType.EndGame:
-                    return new EndGameBehavior(gameGrid, snake);
+                    return new EndGameBehavior(gameLogic);
                 case CollisionBehaviorType.ExtendSnake:
-                    return new ExtendSnakeBehavior(gameGrid, snake, extendValue);
+                    return new ExtendSnakeBehavior(gameLogic, extendValue);
                 default:
-                    return new ContinueBehavior(gameGrid, snake);
+                    return new ContinueBehavior(gameLogic);
             }
         }
     }

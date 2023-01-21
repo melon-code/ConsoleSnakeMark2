@@ -1,27 +1,37 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace ConsoleSnakeMark2 {
     public class GameGrid {
         readonly ICell[,] gameGrid;
+        readonly int capacity;
         readonly HashSetIndexed emptyCells;
+        readonly RandomPointGenerator pointGenerator;
         Point currentSnakeHead;
         Point currentSnakeTail;
 
+        public ICell this[Point point] => gameGrid[point.X, point.Y];
+        public ICell this[int x, int y] => gameGrid[x, y];
+        public int Height { get; }
+        public int Width { get; }
+        public int Capacity => capacity;
+
         public GameGrid(int height, int width) {
             gameGrid = new ICell[height, width];
+            Height = height;
+            Width = width;
+            capacity = Height * Width - 2 * (Height - 1) - 2 * (Width - 1);
             //grid init
             //add empty cells
+            pointGenerator = new RandomPointGenerator(emptyCells);
         }
 
-        public ICell this[Point point] => gameGrid[point.X, point.Y];
-
         void SetItem(Point point, ICell item) {
-            gameGrid[point.X, point.Y] = item;
-            emptyCells.Remove(point);
+            if (item.Type != CellType.Empty) {
+                gameGrid[point.X, point.Y] = item;
+                emptyCells.Remove(point);
+            }
         }
 
         void ReleaseItem(Point point) {
@@ -46,34 +56,8 @@ namespace ConsoleSnakeMark2 {
             SetItem(currentSnakeTail, extendingNextTurn ? new ExtendingSnakeTailCell() : new MovingSnakeTailCell());
         }
 
-        public void AddFood(Point point, int foodValue) {
-            SetItem(point, new FoodCell(foodValue));
-        }
-    }
-
-    public class HashSetIndexed {
-        readonly HashSet<Point> points;
-
-        public Point this[int index] {
-            get {
-                var enumerator = points.GetEnumerator();
-                for (int i = 0; i < index; i++) 
-                    enumerator.MoveNext();
-                return enumerator.Current;
-            }
-        }
-        public int Count => points.Count;
-
-        public HashSetIndexed() {
-            points = new HashSet<Point>();
-        }
-
-        public bool Add(Point point) {
-            return points.Add(point);
-        }
-
-        public bool Remove(Point point) {
-            return points.Remove(point);
+        public void AddRandomFood(int foodValue) {
+            SetItem(pointGenerator.GetPoint(), new FoodCell(foodValue));
         }
     }
 }
