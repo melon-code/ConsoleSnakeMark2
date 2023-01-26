@@ -5,7 +5,7 @@ using System.Text;
 namespace ConsoleSnakeMark2 {
     public interface ICell {
         CellType Type { get; }
-        CollisionBehaviorFactory GetCollisionBehaviorFactory();
+        ICollisionBehaviorParameters GetCollisionBehaviorParameters();
     }
 
     public enum CellType {

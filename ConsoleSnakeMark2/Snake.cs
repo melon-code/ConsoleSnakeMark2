@@ -57,7 +57,7 @@ namespace ConsoleSnakeMark2 {
                 currentDirection = direction;
         }
 
-        public void TeleportSnakeHead(Point destination) {
+        public void TeleportHead(Point destination) {
             Head = new SnakePoint(destination.X, destination.Y);
         }
 

@@ -37,6 +37,10 @@ namespace ConsoleSnakeMark2 {
             snake.Move();
         }
 
+        public void TeleportSnake(Point headDestination) {
+            snake.TeleportHead(headDestination);
+        }
+
         public void EatFood(int foodValue) {
             snake.Eat(foodValue);
         }
@@ -48,8 +52,8 @@ namespace ConsoleSnakeMark2 {
         public void Iterate() {
             if (!IsEnd) {
                 snake.SetNewHeadDirection(currentSnakeDirection);
-                CollisionBehaviorFactory factory = grid[snake.NextTurnHead].GetCollisionBehaviorFactory();
-                factory.Create(this).Execute();
+                ICollisionBehaviorParameters parameters = grid[snake.NextTurnHead].GetCollisionBehaviorParameters();
+                parameters.CreateCollisionBehavior(this).Execute();
             }
         }
     }

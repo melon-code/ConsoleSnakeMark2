@@ -2,8 +2,8 @@
     public class BorderCell : ICell {
         public CellType Type => CellType.Border;
 
-        public CollisionBehaviorFactory GetCollisionBehaviorFactory() {
-            return new CollisionBehaviorFactory(CollisionBehaviorType.EndGame);
+        public ICollisionBehaviorParameters GetCollisionBehaviorParameters() {
+            return new CollisionBehaviorTypeParameter(CollisionBehaviorType.EndGame);
         }
     }
 }

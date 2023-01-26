@@ -2,8 +2,8 @@
     public abstract class SnakeCell : ICell {
         public abstract CellType Type { get; }
 
-        public virtual CollisionBehaviorFactory GetCollisionBehaviorFactory() {
-            return new CollisionBehaviorFactory(CollisionBehaviorType.EndGame);
+        public virtual ICollisionBehaviorParameters GetCollisionBehaviorParameters() {
+            return new CollisionBehaviorTypeParameter(CollisionBehaviorType.EndGame);
         }
     }
 }

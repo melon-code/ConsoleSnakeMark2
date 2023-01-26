@@ -8,8 +8,8 @@
             value = foodValue;
         }
 
-        public CollisionBehaviorFactory GetCollisionBehaviorFactory() {
-            return new CollisionBehaviorFactory(value);
+        public ICollisionBehaviorParameters GetCollisionBehaviorParameters() {
+            return new FoodBehaviorParameters(value);
         }
     }
 }
