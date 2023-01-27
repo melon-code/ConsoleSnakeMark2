@@ -55,6 +55,7 @@
 
         public override void Execute() {
             logic.TeleportSnake(destination);
+            logic.ExecuteCollisionBehavior(destination);
         }
     }
 

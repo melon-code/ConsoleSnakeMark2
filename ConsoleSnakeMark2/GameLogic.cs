@@ -49,11 +49,15 @@ namespace ConsoleSnakeMark2 {
             grid.AddRandomFood(smallFoodValue);
         }
 
+        public void ExecuteCollisionBehavior(Point collisionPoint) {
+            ICollisionBehaviorParameters parameters = grid[collisionPoint].GetCollisionBehaviorParameters();
+            parameters.CreateCollisionBehavior(this).Execute();
+        }
+
         public void Iterate() {
             if (!IsEnd) {
                 snake.SetNewHeadDirection(currentSnakeDirection);
-                ICollisionBehaviorParameters parameters = grid[snake.NextTurnHead].GetCollisionBehaviorParameters();
-                parameters.CreateCollisionBehavior(this).Execute();
+                ExecuteCollisionBehavior(snake.NextTurnHead);
             }
         }
     }
