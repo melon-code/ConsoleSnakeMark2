@@ -22,7 +22,7 @@
             return false;
         }
 
-        SnakeList snake;
+        readonly SnakeList snake;
         Point teleportedHead;
         bool isTeleported = false;
         Direction currentDirection = Direction.Right;

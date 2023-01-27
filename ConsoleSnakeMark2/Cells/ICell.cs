@@ -8,10 +8,6 @@ namespace ConsoleSnakeMark2 {
         ICollisionBehaviorParameters GetCollisionBehaviorParameters();
     }
 
-    public enum CellType {
-        Empty, Border, Food, SnakeHead, SnakeBody, SnakeTail
-    }
-
     public static class CellFactory {
         public static ICell CreateCell() {
             return null;
