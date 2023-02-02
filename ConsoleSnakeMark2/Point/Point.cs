@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace ConsoleSnakeMark2 {
     public class Point : IEquatable<Point> {
         public static bool operator ==(Point point1, Point point2) {
-            if (point1 == null || point2 == null)
+            if (point1 is null || point2 is null)
                 return false;
             return point1.X == point2.X && point1.Y == point2.Y;
         }
