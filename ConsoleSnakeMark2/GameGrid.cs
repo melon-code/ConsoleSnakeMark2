@@ -48,16 +48,16 @@ namespace ConsoleSnakeMark2 {
         public void UpdateSnakeTail(Point newTail) {
             ReleaseItem(currentSnakeTail);
             if (newTail != currentSnakeHead)
-                SetItem(newTail, new MovingSnakeTailCell());
+                SetItem(newTail, new SnakeMovingTailCell());
             currentSnakeTail = newTail;
         }
 
         public void UpdateSnakeTailState(bool extendingNextTurn) {
-            SetItem(currentSnakeTail, extendingNextTurn ? new ExtendingSnakeTailCell() : new MovingSnakeTailCell());
+            SetItem(currentSnakeTail, CellFactory.CreateSnakeTail(extendingNextTurn));
         }
 
         public void AddRandomFood(int foodValue) {
-            SetItem(pointGenerator.GetPoint(), new FoodCell(foodValue));
+            SetItem(pointGenerator.GetPoint(), CellFactory.CreateFood(foodValue));
         }
     }
 }

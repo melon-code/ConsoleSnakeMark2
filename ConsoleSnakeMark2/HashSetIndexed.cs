@@ -7,7 +7,7 @@ namespace ConsoleSnakeMark2 {
         public Point this[int index] {
             get {
                 var enumerator = points.GetEnumerator();
-                for (int i = 0; i < index; i++) 
+                for (int i = -1; i < index; i++) 
                     enumerator.MoveNext();
                 return enumerator.Current;
             }

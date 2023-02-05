@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleSnakeMark2 {
     public class GameLogic {
-        const int smallFoodValue = 1;
+        public const int SmallFoodValue = 1;
         
         readonly Snake snake;
         readonly GameGrid grid;
@@ -46,7 +46,7 @@ namespace ConsoleSnakeMark2 {
         }
 
         public void SpawnFood() {
-            grid.AddRandomFood(smallFoodValue);
+            grid.AddRandomFood(SmallFoodValue);
         }
 
         public void ExecuteCollisionBehavior(Point collisionPoint) {
