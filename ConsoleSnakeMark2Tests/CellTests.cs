@@ -6,14 +6,19 @@ using ConsoleSnakeMark2;
 
 namespace ConsoleSnakeMark2Tests {
     class CellTests {
-        static void GetCollisionBehaviorParametersTest(CellType cellType, Type expectedParametersType) {
-            Assert.IsInstanceOf(expectedParametersType, CellFactory.CreateCell(cellType).GetCollisionBehaviorParameters());
+        static void GetCollisionBehaviorParametersTest<T>(ICell cell, Type expectedParametersType, T expectedParameterValue) {
+            const string parameterValueName = "value";
+            var collisionParameters = cell.GetCollisionBehaviorParameters();
+            Assert.IsInstanceOf(expectedParametersType, collisionParameters);
+            Assert.AreEqual(expectedParameterValue, collisionParameters.GetFieldValue<T>(parameterValueName));
+        }
+        
+        static void GetCollisionBehaviorParametersTest<T>(CellType cellType, Type expectedParametersType, T expectedParameterValue) {
+            GetCollisionBehaviorParametersTest(CellFactory.CreateCell(cellType), expectedParametersType, expectedParameterValue);
         }
 
         static void GetCollisionBehaviorTypeParametersTest(CellType cellType, CollisionBehaviorType collisionBehaviorType) {
-            const string fieldName = "value";
-            var collisioTypeParameters = CellFactory.CreateCell(cellType).GetCollisionBehaviorParameters();
-            Assert.AreEqual(collisionBehaviorType, collisioTypeParameters.GetFieldValue<CollisionBehaviorType>(fieldName));
+            GetCollisionBehaviorParametersTest(cellType, typeof(CollisionBehaviorTypeParameter), collisionBehaviorType);
         }
 
         [Test]
@@ -40,12 +45,16 @@ namespace ConsoleSnakeMark2Tests {
 
         [Test]
         public void FoodCellTest() {
-            GetCollisionBehaviorParametersTest(CellType.Food, typeof(FoodBehaviorParameters));
+            const int foodValue = 1;
+            GetCollisionBehaviorParametersTest(CellType.Food, typeof(FoodBehaviorParameters), foodValue);
         }
 
         [Test]
         public void PortalBorderCellTest() {
-            GetCollisionBehaviorParametersTest(CellType.PortalBorder, typeof(PortalBorderBehaviorParameters));
+            const int x = 2;
+            const int y = 4;
+            Point destination = new Point(x, y);
+            GetCollisionBehaviorParametersTest(new PortalBorderCell(destination), typeof(PortalBorderBehaviorParameters), destination);
         }
     }
 }
