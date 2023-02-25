@@ -60,7 +60,23 @@ namespace ConsoleSnakeMark2Tests {
         }
 
         [Test]
+        public void NotEqualityOperatorTest() {
+            Point point1 = CreatePoint1();
+            Assert.IsTrue(point1 != CreatePoint2());
+            Assert.IsFalse(point1 != CreatePoint1());
+        }
+
+        [Test]
+        public void NotEqualityOperatorNullTest() {
+            Point point = null;
+            Assert.IsTrue(CreatePoint1() != null);
+            Assert.IsFalse(point != null);
+        }
+
+        [Test]
         public void EqualityOperatorNullTest() {
+            Point point = null;
+            Assert.IsTrue(point == null);
             Assert.IsFalse(CreatePoint1() == null);
             Assert.IsFalse(null == CreatePoint1());
         }
@@ -70,6 +86,11 @@ namespace ConsoleSnakeMark2Tests {
             Point point1 = CreatePoint1();
             Assert.IsTrue(point1.Equals(CreatePoint1()));
             Assert.IsFalse(point1.Equals(CreatePoint2()));
+        }
+
+        [Test]
+        public void EqulsNullTest() {
+            Assert.IsFalse(CreatePoint1().Equals(null));
         }
     }
 }

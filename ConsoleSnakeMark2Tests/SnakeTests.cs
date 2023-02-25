@@ -17,9 +17,9 @@ namespace ConsoleSnakeMark2Tests {
 
         static Snake CreateSnake() {
             Snake snake = new Snake(InitialHead);
-            snake.UpdateHeadPosition += new Snake.UpdateHeadPositionHandler((head) => { });
-            snake.UpdateTailPosition += new Snake.UpdateTailPositionHandler((tail) => { });
-            snake.UpdateTailState += new Snake.UpdateTailStateHandler((b) => { });
+            snake.HeadPositionChanged += new Snake.UpdateHeadPositionHandler((head) => { });
+            snake.TailPositionChanged += new Snake.UpdateTailPositionHandler((tail) => { });
+            snake.TailStateChanged += new Snake.UpdateTailStateHandler((b) => { });
             return snake;
         }
         

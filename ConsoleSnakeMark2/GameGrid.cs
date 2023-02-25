@@ -4,51 +4,58 @@ using System.Text;
 
 namespace ConsoleSnakeMark2 {
     public class GameGrid {
-        readonly ICell[,] gameGrid;
+        readonly ICell[,] grid;
         readonly int capacity;
         readonly HashSetIndexed emptyCells;
         readonly RandomPointGenerator pointGenerator;
         Point currentSnakeHead;
         Point currentSnakeTail;
 
-        public ICell this[Point point] => gameGrid[point.X, point.Y];
-        public ICell this[int x, int y] => gameGrid[x, y];
+        public ICell this[Point point] => grid[point.X, point.Y];
+        public ICell this[int x, int y] => grid[x, y];
         public int Height { get; }
         public int Width { get; }
         public int Capacity => capacity;
 
-        public GameGrid(int height, int width) {
-            gameGrid = new ICell[height, width];
+        public GameGrid(int height, int width) : this(height, width, false) {
+        }
+
+        public GameGrid(int height, int width, bool portalBorders) {
+            grid = new ICell[height, width];
             Height = height;
             Width = width;
-            capacity = Height * Width - 2 * (Height - 1) - 2 * (Width - 1);
-            //grid init
-            //add empty cells
+            capacity = (Height - 2) * (Width - 2);
+            grid = new ICell[height, width];
+            emptyCells = new HashSetIndexed();
+            GridInitializer.InitializeGrid(height, width, portalBorders, (point, cell) => SetItem(point, cell));
             pointGenerator = new RandomPointGenerator(emptyCells);
         }
 
         void SetItem(Point point, ICell item) {
-            if (item.Type != CellType.Empty) {
-                gameGrid[point.X, point.Y] = item;
+            grid[point.X, point.Y] = item;
+            if (item.Type == CellType.Empty)
+                emptyCells.Add(point);
+            else
                 emptyCells.Remove(point);
-            }
         }
 
-        void ReleaseItem(Point point) {
-            gameGrid[point.X, point.Y] = new EmptyCell();
-            emptyCells.Add(point);
+        void SetEmptyItem(Point point) {
+            SetItem(point, new EmptyCell());
         }
 
         public void UpdateSnakeHead(Point newHead) {
             SetItem(newHead, new SnakeHeadCell());
-            SetItem(currentSnakeHead, new SnakeBodyCell());
+            if (currentSnakeHead != null)
+                SetItem(currentSnakeHead, new SnakeBodyCell());
             currentSnakeHead = newHead;
         }
 
         public void UpdateSnakeTail(Point newTail) {
-            ReleaseItem(currentSnakeTail);
-            if (newTail != currentSnakeHead)
-                SetItem(newTail, new SnakeMovingTailCell());
+            if (currentSnakeTail != null) {
+                SetEmptyItem(currentSnakeTail);
+                if (newTail != currentSnakeHead)
+                    SetItem(newTail, new SnakeMovingTailCell());
+            }
             currentSnakeTail = newTail;
         }
 

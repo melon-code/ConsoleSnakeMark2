@@ -13,15 +13,19 @@ namespace ConsoleSnakeMark2 {
         public Point NextTurnHead => NewHead;
         public int Length => snake.Count;
         public delegate void UpdateHeadPositionHandler(Point newHead);
-        public event UpdateHeadPositionHandler UpdateHeadPosition;
+        public event UpdateHeadPositionHandler HeadPositionChanged;
         public delegate void UpdateTailPositionHandler(Point newTail);
-        public event UpdateTailPositionHandler UpdateTailPosition;
+        public event UpdateTailPositionHandler TailPositionChanged;
         public delegate void UpdateTailStateHandler(bool extendingNextTurn);
-        public event UpdateTailStateHandler UpdateTailState;
+        public event UpdateTailStateHandler TailStateChanged;
 
         public Snake(Point initialHead) {
             snake = new SnakeList(initialHead);
             headHandler = new SnakeNextHeadHandler(snake);
+        }
+
+        public void SyncInitialHead() {
+            HeadPositionChanged(snake.Head);
         }
 
         public void SetNewHeadDirection(Direction direction) {
@@ -39,15 +43,15 @@ namespace ConsoleSnakeMark2 {
 
         public void Move() {
             var newHead = NewHead;
-            UpdateHeadPosition(newHead);
+            HeadPositionChanged(newHead);
             snake.AddHead(newHead);
             if (IsHungry) {
                 snake.RemoveTail();
-                UpdateTailPosition(snake.Tail);
+                TailPositionChanged(snake.Tail);
             }
             else {
                 leftFood--;
-                UpdateTailState(IsHungry);
+                TailStateChanged(IsHungry);
             }
         }
     }
