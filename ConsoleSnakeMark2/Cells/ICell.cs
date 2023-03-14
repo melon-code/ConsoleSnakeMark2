@@ -32,10 +32,10 @@ namespace ConsoleSnakeMark2 {
             }
         }
 
-        public static ICell CreateSnakeTail(bool isExtending) {
-            if (isExtending)
-                return new SnakeStaticTailCell();
-            return new SnakeMovingTailCell();
+        public static ICell CreateSnakeTail(bool isMoving) {
+            if (isMoving)
+                return new SnakeMovingTailCell();
+            return new SnakeStaticTailCell();
         }
 
         public static ICell CreateFood(int foodValue) {

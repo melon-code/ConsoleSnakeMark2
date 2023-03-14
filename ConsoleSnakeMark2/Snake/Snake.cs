@@ -10,22 +10,19 @@ namespace ConsoleSnakeMark2 {
 
         bool IsHungry => leftFood == 0;
         SnakePoint NewHead => headHandler.GetNextHead();
+        public Point Head => snake.Head;
         public Point NextTurnHead => NewHead;
         public int Length => snake.Count;
         public delegate void UpdateHeadPositionHandler(Point newHead);
         public event UpdateHeadPositionHandler HeadPositionChanged;
         public delegate void UpdateTailPositionHandler(Point newTail);
         public event UpdateTailPositionHandler TailPositionChanged;
-        public delegate void UpdateTailStateHandler(bool extendingNextTurn);
+        public delegate void UpdateTailStateHandler(bool movingNextTurn);
         public event UpdateTailStateHandler TailStateChanged;
 
         public Snake(Point initialHead) {
             snake = new SnakeList(initialHead);
             headHandler = new SnakeNextHeadHandler(snake);
-        }
-
-        public void SyncInitialHead() {
-            HeadPositionChanged(snake.Head);
         }
 
         public void SetNewHeadDirection(Direction direction) {

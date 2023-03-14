@@ -5,6 +5,7 @@ using ConsoleSnakeMark2;
 
 namespace ConsoleSnakeMark2Tests {
     public class TestConst {
-        public const Direction DefaultSnakeDirection = Direction.Right; 
+        public const Direction DefaultSnakeDirection = Direction.Right;
+        public const int SmallFoodValue = 1;
     }
 }

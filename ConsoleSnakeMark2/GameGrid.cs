@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -8,8 +9,7 @@ namespace ConsoleSnakeMark2 {
         readonly int capacity;
         readonly HashSetIndexed emptyCells;
         readonly RandomPointGenerator pointGenerator;
-        Point currentSnakeHead;
-        Point currentSnakeTail;
+        readonly SyncSnakeHandler syncHandler;
 
         public ICell this[Point point] => grid[point.X, point.Y];
         public ICell this[int x, int y] => grid[x, y];
@@ -29,6 +29,7 @@ namespace ConsoleSnakeMark2 {
             emptyCells = new HashSetIndexed();
             GridInitializer.InitializeGrid(height, width, portalBorders, (point, cell) => SetItem(point, cell));
             pointGenerator = new RandomPointGenerator(emptyCells);
+            syncHandler = new SyncSnakeHandler(SetItem);
         }
 
         void SetItem(Point point, ICell item) {
@@ -39,32 +40,51 @@ namespace ConsoleSnakeMark2 {
                 emptyCells.Remove(point);
         }
 
-        void SetEmptyItem(Point point) {
-            SetItem(point, new EmptyCell());
-        }
-
-        public void UpdateSnakeHead(Point newHead) {
-            SetItem(newHead, new SnakeHeadCell());
-            if (currentSnakeHead != null)
-                SetItem(currentSnakeHead, new SnakeBodyCell());
-            currentSnakeHead = newHead;
-        }
-
-        public void UpdateSnakeTail(Point newTail) {
-            if (currentSnakeTail != null) {
-                SetEmptyItem(currentSnakeTail);
-                if (newTail != currentSnakeHead)
-                    SetItem(newTail, new SnakeMovingTailCell());
-            }
-            currentSnakeTail = newTail;
-        }
-
-        public void UpdateSnakeTailState(bool extendingNextTurn) {
-            SetItem(currentSnakeTail, CellFactory.CreateSnakeTail(extendingNextTurn));
+        public void BoundSnake(Snake snake) {
+            syncHandler.BoundSnake(snake);
         }
 
         public void AddRandomFood(int foodValue) {
             SetItem(pointGenerator.GetPoint(), CellFactory.CreateFood(foodValue));
+        }
+    }
+
+    public class SyncSnakeHandler {
+        readonly Action<Point, ICell> setItem;
+        Point currentSnakeHead;
+        Point currentSnakeTail;
+
+        public SyncSnakeHandler(Action<Point, ICell> setGridItem) {
+            setItem = setGridItem;
+        }
+
+        void SetHead(Point head) {
+            setItem(head, new SnakeHeadCell());
+        }
+
+        void UpdateSnakeHead(Point newHead) {
+            SetHead(newHead);
+            setItem(currentSnakeHead, new SnakeBodyCell());
+            currentSnakeHead = newHead;
+        }
+
+        void UpdateSnakeTail(Point newTail) {
+            setItem(currentSnakeTail, new EmptyCell());
+            if (newTail != currentSnakeHead)
+                setItem(newTail, new SnakeMovingTailCell());
+            currentSnakeTail = newTail;
+        }
+
+        void UpdateSnakeTailState(bool movingNextTurn) {
+            setItem(currentSnakeTail, CellFactory.CreateSnakeTail(movingNextTurn));
+        }
+
+        public void BoundSnake(Snake snake) {
+            snake.HeadPositionChanged += new Snake.UpdateHeadPositionHandler((point) => UpdateSnakeHead(point));
+            snake.TailPositionChanged += new Snake.UpdateTailPositionHandler((point) => UpdateSnakeTail(point));
+            snake.TailStateChanged += new Snake.UpdateTailStateHandler((extending) => UpdateSnakeTailState(extending));
+            currentSnakeTail = currentSnakeHead = snake.Head;
+            SetHead(currentSnakeHead);
         }
     }
 }

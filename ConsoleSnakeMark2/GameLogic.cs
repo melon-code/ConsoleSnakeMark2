@@ -24,10 +24,7 @@ namespace ConsoleSnakeMark2 {
         public GameLogic(GameGrid gameGrid, Snake snake) {
             grid = gameGrid;
             this.snake = snake;
-            snake.HeadPositionChanged += new Snake.UpdateHeadPositionHandler((point) => grid.UpdateSnakeHead(point));
-            snake.TailPositionChanged += new Snake.UpdateTailPositionHandler((point) => grid.UpdateSnakeTail(point));
-            snake.TailStateChanged += new Snake.UpdateTailStateHandler((b) => grid.UpdateSnakeTailState(b));
-            snake.SyncInitialHead();
+            grid.BoundSnake(snake);
         }
 
         public void StopGame() {
