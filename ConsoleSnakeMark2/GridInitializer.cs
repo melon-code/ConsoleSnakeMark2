@@ -5,13 +5,13 @@ namespace ConsoleSnakeMark2 {
         static int Positive(int number) {
             return number < 0 ? -number : number;
         }
-        
+
         static int GetPortalDestination(int coordinate, int border) {
             return coordinate == 0 || coordinate == border ? Positive(coordinate - (border - 1)) : coordinate;
         }
 
         static ICell CreatePortalBorder(int indX, int indY, int rightBorder, int downBorder) {
-            return new PortalBorderCell(new Point(GetPortalDestination(indX, downBorder),GetPortalDestination(indY, rightBorder)));
+            return new PortalBorderCell(new Point(GetPortalDestination(indX, downBorder), GetPortalDestination(indY, rightBorder)));
         }
 
         public static ICell InitializeCell(int indX, int indY, bool portalBorders, int height, int width) {
@@ -26,7 +26,7 @@ namespace ConsoleSnakeMark2 {
         }
 
         public static void InitializeGrid(int height, int width, bool portalBorders, Action<Point, ICell> setCell) {
-            for (int i = 0; i < height; i++) 
+            for (int i = 0; i < height; i++)
                 for (int j = 0; j < width; j++)
                     setCell(new Point(i, j), InitializeCell(i, j, portalBorders, height, width));
         }

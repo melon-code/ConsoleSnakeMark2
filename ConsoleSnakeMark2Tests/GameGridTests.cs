@@ -8,6 +8,8 @@ namespace ConsoleSnakeMark2Tests {
     class GameGridTests {
         const int height = 12;
         const int width = 16;
+        const int onlyHeadLength = 1;
+        const int onlyHeadTailLength = 2;
 
         static int InitialX => height / 2;
         static SnakePoint InitialHead => new SnakePoint(InitialX, width / 2);
@@ -36,13 +38,12 @@ namespace ConsoleSnakeMark2Tests {
                 Assert.IsInstanceOf<SnakeHeadCell>(item);
                 return true;
             }
-            var body = snake.GetBody();
-            if (body != null && body.Contains(target)) {
+            int length = snake.Length;
+            if (length > onlyHeadTailLength && snake.GetBody().Contains(target)) {
                 Assert.IsInstanceOf<SnakeBodyCell>(item);
                 return true;
             }
-            var tail = snake.GetTail();
-            if (tail != null && target == tail) {
+            if (length > onlyHeadLength && target == snake.GetTail()) {
                 Assert.IsInstanceOf<SnakeTailType>(item);
                 return true;
             }

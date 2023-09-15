@@ -10,13 +10,17 @@ namespace ConsoleSnakeMark2Tests {
         const int width = 15;
 
         static void CellTest<T>(int x, int y, bool portalBorders) {
-            Assert.IsInstanceOf(typeof(T), GridInitializer.InitializeCell(x, y, portalBorders, height, width));
+            Assert.IsInstanceOf<T>(GridInitializer.InitializeCell(x, y, portalBorders, height, width));
         }
 
         static bool IsBorder(int x, int y) {
-            if (x == 0 || y == 0 || x == height - 1 || y == width - 1) 
+            if (x == 0 || y == 0 || x == height - 1 || y == width - 1)
                 return true;
             return false;
+        }
+
+        static Type GetCellType<T>(int x, int y) {
+            return IsBorder(x, y) ? typeof(T) : typeof(EmptyCell);
         }
 
         static void CheckGrid<T>(bool portalBorders) {
@@ -24,8 +28,7 @@ namespace ConsoleSnakeMark2Tests {
             GridInitializer.InitializeGrid(height, width, portalBorders, (point, cell) => grid[point.X, point.Y] = cell);
             for (int i = 0; i < height; i++)
                 for (int j = 0; j < width; j++)
-                    if (IsBorder(i, j))
-                        Assert.IsInstanceOf<T>(grid[i, j]);
+                    Assert.IsInstanceOf(GetCellType<T>(i, j), grid[i, j]);
         }
 
         [TestCase(0, 0)]
@@ -39,12 +42,22 @@ namespace ConsoleSnakeMark2Tests {
             CellTest<PortalBorderCell>(x, y, true);
         }
 
-        [Test]
-        public void InitializeCellEmptyTest() {
-            const int indX = 4;
-            const int indY = 8;
-            CellTest<EmptyCell>(indX, indY, false);
-            CellTest<EmptyCell>(indX, indY, true);
+        [TestCase(0, 4, height - 2, 4)]
+        [TestCase(5, 0, 5, width - 2)]
+        [TestCase(8, width - 1, 8, 1)]
+        [TestCase(height - 1, 3, 1, 3)]
+        public void PortalBorderDestinationTest(int x, int y, int dX, int dY) {
+            const string name = "destination";
+            var portalCell = GridInitializer.InitializeCell(x, y, true, height, width);
+            Assert.AreEqual(new Point(dX, dY), portalCell.GetFieldValue<Point>(name));
+        }
+
+        [TestCase(4, 8)]
+        [TestCase(8, 4)]
+        [TestCase(1, 1)]
+        public void InitializeCellEmptyTest(int x, int y) {
+            CellTest<EmptyCell>(x, y, false);
+            CellTest<EmptyCell>(x, y, true);
         }
 
         [Test]

@@ -6,7 +6,6 @@ using ConsoleSnakeMark2;
 
 namespace ConsoleSnakeMark2Tests {
     class SnakeTests {
-        const int smallFood = 1;
         const int bigFood = 2;
         const int initialSnakeLength = 1;
         const string leftFoodName = "leftFood";
@@ -25,13 +24,8 @@ namespace ConsoleSnakeMark2Tests {
         
         static Snake CreateSnakeAndEat() {
             Snake snake = CreateSnake();
-            snake.Eat(smallFood);
+            snake.Eat(TestConst.SmallFoodValue);
             return snake;
-        }
-
-        static SnakeList GetSnakeList(Snake snake) {
-            const string name = "snake";
-            return snake.GetFieldValue<SnakeList>(name);
         }
 
         static void AssertEatFood(Snake snake, int expectedFoodValue, int expectedFoodCount) {
@@ -41,20 +35,20 @@ namespace ConsoleSnakeMark2Tests {
 
         static void AssertHeadTail(Snake snake, int expectedLenght, Point expectedHead, Point expectedTail) {
             Assert.AreEqual(expectedLenght, snake.Length);
-            Assert.AreEqual(expectedHead, GetSnakeList(snake).Head);
-            Assert.AreEqual(expectedTail, GetSnakeList(snake).Tail);
+            Assert.AreEqual(expectedHead, snake.Head);
+            Assert.AreEqual(expectedTail, snake.GetTail());
         }
 
         [Test]
         public void EatFoodTest() {
-            AssertEatFood(CreateSnakeAndEat(), smallFood, 1);
+            AssertEatFood(CreateSnakeAndEat(), TestConst.SmallFoodValue, 1);
         }
 
         [Test]
         public void EatMultipleFood() {
             Snake snake = CreateSnakeAndEat();
             snake.Eat(bigFood);
-            AssertEatFood(snake, smallFood + bigFood, 2);
+            AssertEatFood(snake, TestConst.SmallFoodValue + bigFood, 2);
         }
 
         [Test]
@@ -81,6 +75,16 @@ namespace ConsoleSnakeMark2Tests {
                 expectedHead = expectedHead.GetNextSnakePoint(TestConst.DefaultSnakeDirection);
             }
             AssertHeadTail(snake, initialSnakeLength + bigFood, expectedHead, MoveInitialHead);
+        }
+
+        [Test]
+        public void TeleportHeadTest() {
+            Point point = new Point(6, 6);
+            Snake snake = CreateSnakeAndEat();
+            snake.Move();
+            snake.TeleportHead(point);
+            snake.Move();
+            AssertHeadTail(snake, initialSnakeLength + 1, point, MoveInitialHead);
         }
     }
 }
