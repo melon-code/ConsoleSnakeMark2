@@ -40,15 +40,15 @@ namespace ConsoleSnakeMark2 {
 
         public void Move() {
             var newHead = NewHead;
-            HeadPositionChanged(newHead);
+            HeadPositionChanged?.Invoke(newHead);
             snake.AddHead(newHead);
             if (IsHungry) {
                 snake.RemoveTail();
-                TailPositionChanged(snake.Tail);
+                TailPositionChanged?.Invoke(snake.Tail);
             }
             else {
                 leftFood--;
-                TailStateChanged(IsHungry);
+                TailStateChanged?.Invoke(IsHungry);
             }
         }
     }

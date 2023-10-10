@@ -12,6 +12,7 @@ namespace ConsoleSnakeMark2 {
         bool gameOver = false;
 
         bool IsWin => grid.Capacity == snake.Length;
+        public GameGrid Grid => grid;
         public bool IsEnd => IsWin || gameOver;
         public Direction CurrentSnakeDirection {
             get => currentSnakeDirection;
@@ -25,6 +26,7 @@ namespace ConsoleSnakeMark2 {
             grid = gameGrid;
             this.snake = snake;
             grid.BoundSnake(snake);
+            SpawnFood();
         }
 
         public void StopGame() {
@@ -44,7 +46,7 @@ namespace ConsoleSnakeMark2 {
         }
 
         public void SpawnFood() {
-            grid.AddRandomFood(SmallFoodValue);
+            grid.AddFoodRandomPlace(SmallFoodValue);
         }
 
         public void ExecuteCollisionBehavior(Point collisionPoint) {

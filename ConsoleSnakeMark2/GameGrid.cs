@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -17,6 +16,9 @@ namespace ConsoleSnakeMark2 {
         public int Width { get; }
         public int Capacity => capacity;
 
+        public GameGrid(int sideSize): this(sideSize, sideSize) {
+        }
+        
         public GameGrid(int height, int width) : this(height, width, false) {
         }
 
@@ -43,48 +45,17 @@ namespace ConsoleSnakeMark2 {
         public void BoundSnake(Snake snake) {
             syncHandler.BoundSnake(snake);
         }
+        
+        public bool AddFood(Point point, int foodValue) {
+            if (this[point] is EmptyCell) {
+                SetItem(point, CellFactory.CreateFood(foodValue));
+                return true;
+            }
+            return false;
+        }
 
-        public void AddRandomFood(int foodValue) {
+        public void AddFoodRandomPlace(int foodValue) {
             SetItem(pointGenerator.GetPoint(), CellFactory.CreateFood(foodValue));
-        }
-    }
-
-    public class SyncSnakeHandler {
-        readonly Action<Point, ICell> setItem;
-        Point currentSnakeHead;
-        Point currentSnakeTail;
-
-        public SyncSnakeHandler(Action<Point, ICell> setGridItem) {
-            setItem = setGridItem;
-        }
-
-        void SetHead(Point head) {
-            setItem(head, new SnakeHeadCell());
-        }
-
-        void UpdateSnakeHead(Point newHead) {
-            SetHead(newHead);
-            setItem(currentSnakeHead, new SnakeBodyCell());
-            currentSnakeHead = newHead;
-        }
-
-        void UpdateSnakeTail(Point newTail) {
-            setItem(currentSnakeTail, new EmptyCell());
-            if (newTail != currentSnakeHead)
-                setItem(newTail, new SnakeMovingTailCell());
-            currentSnakeTail = newTail;
-        }
-
-        void UpdateSnakeTailState(bool movingNextTurn) {
-            setItem(currentSnakeTail, CellFactory.CreateSnakeTail(movingNextTurn));
-        }
-
-        public void BoundSnake(Snake snake) {
-            snake.HeadPositionChanged += new Snake.UpdateHeadPositionHandler((point) => UpdateSnakeHead(point));
-            snake.TailPositionChanged += new Snake.UpdateTailPositionHandler((point) => UpdateSnakeTail(point));
-            snake.TailStateChanged += new Snake.UpdateTailStateHandler((extending) => UpdateSnakeTailState(extending));
-            currentSnakeTail = currentSnakeHead = snake.Head;
-            SetHead(currentSnakeHead);
         }
     }
 }

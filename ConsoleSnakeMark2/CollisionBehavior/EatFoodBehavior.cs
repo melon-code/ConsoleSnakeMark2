@@ -9,7 +9,8 @@
         public override void Execute() {
             logic.EatFood(value);
             logic.MoveSnake();
-            logic.SpawnFood();
+            if (!logic.IsEnd)
+                logic.SpawnFood();
         }
     }
 }
