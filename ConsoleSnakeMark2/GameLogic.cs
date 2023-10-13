@@ -49,6 +49,10 @@ namespace ConsoleSnakeMark2 {
             grid.AddFoodRandomPlace(SmallFoodValue);
         }
 
+        public bool SpawnFood(Point point, int foodValue) {
+            return grid.AddFood(point, foodValue);
+        }
+
         public void ExecuteCollisionBehavior(Point collisionPoint) {
             ICollisionBehaviorParameters parameters = grid[collisionPoint].GetCollisionBehaviorParameters();
             parameters.CreateCollisionBehavior(this).Execute();
