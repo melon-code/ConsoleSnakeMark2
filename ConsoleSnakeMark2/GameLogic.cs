@@ -8,23 +8,26 @@ namespace ConsoleSnakeMark2 {
         
         readonly Snake snake;
         readonly GameGrid grid;
-        Direction currentSnakeDirection = Direction.Right;
+        Direction currentSnakeDirection;
         bool gameOver = false;
 
         bool IsWin => grid.Capacity == snake.Length;
         public GameGrid Grid => grid;
+        public int SnakeLenght => snake.Length;
+        public int AteFood => snake.AteFood;
         public bool IsEnd => IsWin || gameOver;
         public Direction CurrentSnakeDirection {
-            get => currentSnakeDirection;
+            get => snake.HeadDirection;
             set {
                 if (value != currentSnakeDirection)
                     currentSnakeDirection = value;
             }
         }
 
-        public GameLogic(GameGrid gameGrid, Snake snake) {
+        public GameLogic(GameGrid gameGrid, Snake initialSnake) {
             grid = gameGrid;
-            this.snake = snake;
+            snake = initialSnake;
+            currentSnakeDirection = snake.HeadDirection;
             grid.BoundSnake(snake);
             SpawnFood();
         }

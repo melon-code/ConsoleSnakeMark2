@@ -20,7 +20,7 @@ namespace ConsoleSnakeMark2Tests {
             GameGrid grid = new GameGrid(height, width);
             Assert.AreEqual(expectedCapacity, grid.Capacity);
         }
-                
+
         [TestCase(TestConst.SmallFoodValue)]
         [TestCase(5)]
         public void AddFoodEmptyCellTest(int foodValue) {
@@ -47,6 +47,15 @@ namespace ConsoleSnakeMark2Tests {
             grid.AddFoodRandomPlace(foodValue);
             Assert.IsTrue(GridTestHelper.TryFindFoodPoint(grid, out Point food));
             AssertFoodValue(foodValue, grid[food]);
+        }
+
+        [TestCase(15, 20, 15, 20)]
+        [TestCase(GameData.MinGridHeight - 1, GameData.MinGridWidth - 1, GameData.MinGridHeight, GameData.MinGridWidth)]
+        [TestCase(GameData.MaxGridHeight + 1, GameData.MaxGridWidth + 1, GameData.MaxGridHeight, GameData.MaxGridWidth)]
+        public void SizeVerificationTest(int height, int width, int expectedHeight, int expectedWidth) {
+            GameGrid grid = new GameGrid(height, width);
+            Assert.AreEqual(expectedHeight, grid.Height);
+            Assert.AreEqual(expectedWidth, grid.Width);
         }
     }
 }

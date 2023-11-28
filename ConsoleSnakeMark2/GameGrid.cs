@@ -23,13 +23,13 @@ namespace ConsoleSnakeMark2 {
         }
 
         public GameGrid(int height, int width, bool portalBorders) {
-            grid = new ICell[height, width];
-            Height = height;
-            Width = width;
+            Height = Utility.VerifyValue(height, GameData.MinGridHeight, GameData.MaxGridHeight);
+            Width = Utility.VerifyValue(width, GameData.MinGridWidth, GameData.MaxGridWidth);
+            grid = new ICell[Height, Width];
             capacity = (Height - 2) * (Width - 2);
-            grid = new ICell[height, width];
+            grid = new ICell[Height, Width];
             emptyCells = new HashSetIndexed();
-            GridInitializer.InitializeGrid(height, width, portalBorders, (point, cell) => SetItem(point, cell));
+            GridInitializer.InitializeGrid(Height, Width, portalBorders, (point, cell) => SetItem(point, cell));
             pointGenerator = new RandomPointGenerator(emptyCells);
             syncHandler = new SyncSnakeHandler(SetItem);
         }

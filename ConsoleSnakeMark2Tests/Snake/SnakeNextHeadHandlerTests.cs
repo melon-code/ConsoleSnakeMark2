@@ -10,7 +10,7 @@ namespace ConsoleSnakeMark2Tests {
         static SnakePoint NextPoint => InitialPoint.GetNextSnakePoint(Direction.Right);
 
         static SnakeNextHeadHandler CreateHeadHandler() {
-            return new SnakeNextHeadHandler(new SnakeList(InitialPoint));
+            return new SnakeNextHeadHandler(new SnakeList(InitialPoint), Direction.Right);
         }
         
         static void IsOppositeTest(bool expected, Direction direction1, Direction direction2) {
@@ -35,10 +35,9 @@ namespace ConsoleSnakeMark2Tests {
         [TestCase(Direction.Right, Direction.Left)]
         [TestCase(Direction.Up, Direction.Up)]
         public void SetNewHeadDirectionTest(Direction expected, Direction setDirection) {
-            const string name = "currentDirection";
             var handler = CreateHeadHandler();
             handler.SetNewHeadDirection(setDirection);
-            Assert.AreEqual(expected, handler.GetFieldValue<Direction>(name));
+            Assert.AreEqual(expected, handler.Direction);
         }
 
         [Test]

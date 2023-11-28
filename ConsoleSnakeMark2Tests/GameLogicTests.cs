@@ -6,63 +6,51 @@ using ConsoleSnakeMark2;
 
 namespace ConsoleSnakeMark2Tests {
     class GameLogicTests {
-        const int height = 10;
-        const int width = 12;
+        const int height = GameLogicTestWrap.Height;
+        const int width = GameLogicTestWrap.Width;
 
-        static Point Center = new Point(height / 2, width / 2);
-        
-        static GameLogic CreateLogic(Point snakeHead, int gridHeight = height, int gridWidth = width) {
-            return new GameLogic(new GameGrid(gridHeight, gridWidth), new Snake(snakeHead));
-        }
-
-        static void AssertGameOver(GameLogic logic) {
-            const string fieldName = "gameOver";
-            Assert.IsTrue(logic.GetFieldValue<bool>(fieldName));
+        static void AssertGameOver(GameLogicTestWrap logic) {
+            Assert.IsTrue(logic.GameOver);
             Assert.IsTrue(logic.IsEnd);
-        }
-
-        static void MoveSnake(GameLogic logic, Direction direction = Direction.Right) {
-            logic.CurrentSnakeDirection = direction;
-            logic.Iterate();
         }
 
         static void WinTestBase(int iterations) {
-            GameLogic logic = CreateLogic(new Point(1, 1), 3, 4);
+            GameLogicTestWrap logic = new GameLogicTestWrap(new Point(1, 1), 3, 4);
             for (int i = 0; i < iterations; i++)
-                logic.Iterate();
-            Assert.IsTrue(logic.GetPropertyValue<bool>("IsWin"));
+                logic.MoveSnakeWithCollision();
+            Assert.IsTrue(logic.IsWin);
             Assert.IsTrue(logic.IsEnd);
         }
 
-        static void EatFoodAndMoveInCircle(out GameLogic logic, int foodValue, int iterationsBeforeCircle) {
-            logic = CreateLogic(Center);
-            logic.SpawnFood(new Point(Center.X, Center.Y + 1), foodValue);
+        static void EatFoodAndMoveInCircle(out GameLogicTestWrap logic, int foodValue, int iterationsBeforeCircle) {
+            logic = new GameLogicTestWrap();
+            logic.EatFood(foodValue);
             for (int i = 0; i < iterationsBeforeCircle; i++)
-                MoveSnake(logic);
-            MoveSnake(logic, Direction.Up);
-            MoveSnake(logic, Direction.Left);
-            MoveSnake(logic, Direction.Down);
+                logic.MoveSnakeWithoutCollision();
+            logic.MoveSnakeWithoutCollision(Direction.Up);
+            logic.MoveSnakeWithoutCollision(Direction.Left);
+            logic.MoveSnakeWithCollision(Direction.Down);
         }
 
         [Test]
         public void GameOverBorderTest() {
-            GameLogic logic = CreateLogic(new Point(height / 2, width - 2));
-            logic.Iterate();
+            GameLogicTestWrap logic = new GameLogicTestWrap(new Point(height / 2, width - 2));
+            logic.MoveSnakeWithCollision();
             AssertGameOver(logic);
         }
 
         [Test]
         public void GameOverSnakeTest() {
             const int bigFoodValue = 10;
-            EatFoodAndMoveInCircle(out GameLogic logic, bigFoodValue, 4);
+            EatFoodAndMoveInCircle(out GameLogicTestWrap logic, bigFoodValue, 4);
             AssertGameOver(logic);
         }
 
         [Test]
         public void IterateAfterGameOverTest() {
-            GameLogic logic = CreateLogic(Center);
+            GameLogicTestWrap logic = new GameLogicTestWrap();
             for (int i = 0; i < width; i++)
-                logic.Iterate();
+                logic.MoveSnakeWithCollision();
             AssertGameOver(logic);
         }
 
@@ -79,15 +67,24 @@ namespace ConsoleSnakeMark2Tests {
         [Test]
         public void MovingSnakeTailTest() {
             const int bigFoodValue = 3;
-            EatFoodAndMoveInCircle(out GameLogic logic, bigFoodValue, 1);
+            EatFoodAndMoveInCircle(out GameLogicTestWrap logic, bigFoodValue, 1);
             Assert.IsFalse(logic.IsEnd);
         }
 
         [Test]
         public void StaticSnakeTailTest() {
             const int bigFoodValue = 4;
-            EatFoodAndMoveInCircle(out GameLogic logic, bigFoodValue, 1);
+            EatFoodAndMoveInCircle(out GameLogicTestWrap logic, bigFoodValue, 1);
             AssertGameOver(logic);
+        }
+
+        [Test]
+        public void CurrentDirectionTest() {
+            Direction initialDirection = Direction.Left;
+            GameLogic logic = new GameLogic(new GameGrid(height, width), new Snake(GameLogicTestWrap.Center, initialDirection));
+            logic.CurrentSnakeDirection = Direction.Right;
+            logic.Iterate();
+            Assert.AreEqual(initialDirection, logic.CurrentSnakeDirection);
         }
     }
 }

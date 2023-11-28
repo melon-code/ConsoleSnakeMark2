@@ -25,10 +25,13 @@
         readonly SnakeList snake;
         Point teleportedHead;
         bool isTeleported = false;
-        Direction currentDirection = Direction.Right;
+        Direction currentDirection;
 
-        public SnakeNextHeadHandler(SnakeList snakeList) {
+        public Direction Direction => currentDirection;
+
+        public SnakeNextHeadHandler(SnakeList snakeList, Direction initialDirection) {
             snake = snakeList;
+            currentDirection = initialDirection;
         }
 
         public void SetNewHeadDirection(Direction direction) {

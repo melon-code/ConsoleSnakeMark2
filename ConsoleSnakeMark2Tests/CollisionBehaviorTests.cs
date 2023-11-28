@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace ConsoleSnakeMark2Tests {
     class CollisionBehaviorTests {
-        //portal border beh
         const int gridSize = 10;
 
         static Point Center => new Point(gridSize / 2, gridSize / 2);
