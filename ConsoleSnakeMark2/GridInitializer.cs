@@ -10,25 +10,49 @@ namespace ConsoleSnakeMark2 {
             return coordinate == 0 || coordinate == border ? Positive(coordinate - (border - 1)) : coordinate;
         }
 
-        static ICell CreatePortalBorder(int indX, int indY, int rightBorder, int downBorder) {
-            return new PortalBorderCell(new Point(GetPortalDestination(indX, downBorder), GetPortalDestination(indY, rightBorder)));
+        static ICell CreatePortalBorder(int indX, int indY, int height, int width) {
+            return new PortalBorderCell(new Point(GetPortalDestination(indX, height - 1), GetPortalDestination(indY, width - 1)));
+        }
+
+        static bool IsBorder(int indX, int indY, int height, int width) {
+            return indX == 0 || indY == 0 || indX == height - 1 || indY == width - 1;
+        }
+
+        static ICell ParseCell(int indX, int indY, string data, int height, int width) {
+            switch (data[indX * width + indY]) {
+                case ParsingData.Border:
+                    return CellFactory.Border;
+                case ParsingData.PortalBorder:
+                    return CreatePortalBorder(indX, indY, height, width);
+                case ParsingData.SmallFood:
+                    return CellFactory.SmallFood;
+            }
+            if (IsBorder(indX, indY, height, width))
+                return CellFactory.Border;
+            return CellFactory.Empty;
+        }
+
+        static void IterateGrid(int height, int width, Action<Point, ICell> setCell, Func<int, int, ICell> getCell) {
+            for (int i = 0; i < height; i++)
+                for (int j = 0; j < width; j++)
+                    setCell(new Point(i, j), getCell(i, j));
         }
 
         public static ICell InitializeCell(int indX, int indY, bool portalBorders, int height, int width) {
-            int rightBorder = width - 1;
-            int downBorder = height - 1;
-            if (indX == 0 || indY == 0 || indX == downBorder || indY == rightBorder) {
+            if (IsBorder(indX, indY, height, width)) {
                 if (portalBorders)
-                    return CreatePortalBorder(indX, indY, rightBorder, downBorder);
-                return new BorderCell();
+                    return CreatePortalBorder(indX, indY, height, width);
+                return CellFactory.Border;
             }
-            return new EmptyCell();
+            return CellFactory.Empty;
         }
 
         public static void InitializeGrid(int height, int width, bool portalBorders, Action<Point, ICell> setCell) {
-            for (int i = 0; i < height; i++)
-                for (int j = 0; j < width; j++)
-                    setCell(new Point(i, j), InitializeCell(i, j, portalBorders, height, width));
+            IterateGrid(height, width, setCell, (x, y) => InitializeCell(x, y, portalBorders, height, width));
+        }
+
+        public static void ParseGrid(int height, int width, string data, Action<Point, ICell> setCell) {
+            IterateGrid(height, width, setCell, (x, y) => ParseCell(x, y, data, height, width));
         }
     }
 }

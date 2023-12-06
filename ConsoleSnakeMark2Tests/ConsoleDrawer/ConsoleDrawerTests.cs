@@ -45,12 +45,21 @@ namespace ConsoleSnakeMark2Tests {
         [TestCase(Direction.Left, DrawerData.HeadLeft)]
         [TestCase(Direction.Right, DrawerData.HeadRight)]
         public void DrawSnakeTest(Direction direction, char expectedHead) {
-            int foodValue = 2;
+            const int foodValue = 2;
             GameLogicTestWrap logic = new GameLogicTestWrap(direction);
             logic.EatFood(foodValue);
             logic.MoveSnakeWithoutCollision(direction);
             logic.MoveSnakeWithoutCollision(direction);
             PerformDrawerCheck(logic, GetNextPoint(direction, 2), GetNextPoint(direction), Center, expectedHead, DrawerData.MovingTail);
+        }
+
+        [Test]
+        public void DrawStaticTailTest() {
+            const int foodValue = 3;
+            GameLogicTestWrap logic = new GameLogicTestWrap();
+            logic.EatFood(foodValue);
+            logic.MoveSnakeWithCollision();
+            PerformDrawerCheck(logic, GetNextPoint(GameData.DefaultSnakeDirection), null, Center, DrawerData.HeadRight, DrawerData.StaticTail);
         }
     }
 }

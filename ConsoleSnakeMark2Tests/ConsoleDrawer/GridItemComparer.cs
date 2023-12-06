@@ -12,7 +12,7 @@ namespace ConsoleSnakeMark2Tests {
             AddItem(snakeHead, headChar);
             AddItem(snakeBody, DrawerData.Body);
             AddItem(snakeTail, tailChar);
-            AddItem(food, DrawerData.Food);
+            AddItem(food, DrawerData.SmallFood);
         }
 
         void AddItem(Point point, char symbol) {

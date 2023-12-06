@@ -17,25 +17,32 @@ namespace ConsoleSnakeMark2 {
 
         AdditionalDrawingData DrawingData => new AdditionalDrawingData(gameLogic.CurrentSnakeDirection, gameLogic.SnakeLenght, gameLogic.AteFood);
 
-        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, Point initialSnakePosition, int speed) {
-            gameLogic = new GameLogic(new GameGrid(gridHeight, gridWidth, portalBorders), new Snake(initialSnakePosition));
+        GameProcessor(GameGrid grid, Snake snake, int speed) {
+            gameLogic = new GameLogic(grid, snake);
             interval = SpeedToMs(speed);
             drawer = new ConsoleDrawer(gameLogic.Grid);
+        }
+
+        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, Point initialSnakePosition, int speed)
+            : this(new GameGrid(gridHeight, gridWidth, portalBorders), new Snake(initialSnakePosition), speed) {
         }
 
         public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, Point initialSnakePosition) : this(gridHeight, gridWidth, portalBorders, initialSnakePosition, GameData.DefaultSpeed) {
         }
 
-        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders) : this(gridHeight, gridWidth, portalBorders, new Point(gridHeight / 2, gridWidth / 2)) {
+        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders) : this(gridHeight, gridWidth, portalBorders, GameData.DefaultSnakePosition(gridHeight, gridWidth)) {
         }
 
         public GameProcessor(int gridHeight, int gridWidth) : this(gridHeight, gridWidth, GameData.DefaultPortalBorders) {
         }
 
+        public GameProcessor(ICustomGameGridData data) : this(new GameGrid(data.Height, data.Width, data.GridData), new Snake(data.InitialSnakePosition, data.InitialSnakeDirection), data.Speed) {
+        }
+
         void ChangeDirection(Direction direction) {
             gameLogic.CurrentSnakeDirection = direction;
         }
-        
+
         public void StartGameLoop() {
             using var keystroke = new KeystrokeAPI();
             keystroke.CreateKeyboardHook((character) => {

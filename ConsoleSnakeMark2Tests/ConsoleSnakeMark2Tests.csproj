@@ -17,4 +17,10 @@
     <ProjectReference Include="..\ConsoleSnakeMark2\ConsoleSnakeMark2.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="CustomGameGridFile\CustomGameGridTestFile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

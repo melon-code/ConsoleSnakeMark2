@@ -23,7 +23,7 @@ namespace ConsoleSnakeMark2Tests {
             return IsBorder(x, y) ? typeof(T) : typeof(EmptyCell);
         }
 
-        static void CheckGrid<T>(bool portalBorders) {
+        static void CheckGridInitialization<T>(bool portalBorders) {
             ICell[,] grid = new ICell[height, width];
             GridInitializer.InitializeGrid(height, width, portalBorders, (point, cell) => grid[point.X, point.Y] = cell);
             for (int i = 0; i < height; i++)
@@ -62,8 +62,24 @@ namespace ConsoleSnakeMark2Tests {
 
         [Test]
         public void InitializeGridTest() {
-            CheckGrid<BorderCell>(false);
-            CheckGrid<PortalBorderCell>(true);
+            CheckGridInitialization<BorderCell>(false);
+            CheckGridInitialization<PortalBorderCell>(true);
+        }
+
+        [Test]
+        public void ParseDataTest() {
+            const int h = 3, w = 3;
+            const string data = "BPBPoP B ";
+            ICell[,] grid = new ICell[h, w];
+            GridInitializer.ParseGrid(h, w, data, (point, cell) => grid[point.X, point.Y] = cell);
+            CellType[,] expected = new CellType[h, w] { 
+                { CellType.Border, CellType.PortalBorder, CellType.Border }, 
+                { CellType.PortalBorder, CellType.Food, CellType.PortalBorder }, 
+                { CellType.Border, CellType.Border, CellType.Border } 
+            };
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
+                    Assert.AreEqual(expected[i, j], grid[i, j].Type);
         }
     }
 }

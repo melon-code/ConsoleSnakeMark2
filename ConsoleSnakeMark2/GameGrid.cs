@@ -16,22 +16,28 @@ namespace ConsoleSnakeMark2 {
         public int Width { get; }
         public int Capacity => capacity;
 
+        GameGrid(GridSize size) {
+            Height = size.Height;
+            Width = size.Width;
+            grid = new ICell[Height, Width];
+            capacity = (Height - 2) * (Width - 2);
+            emptyCells = new HashSetIndexed();
+            pointGenerator = new RandomPointGenerator(emptyCells);
+            syncHandler = new SyncSnakeHandler(SetItem);
+        }
+
         public GameGrid(int sideSize): this(sideSize, sideSize) {
         }
         
         public GameGrid(int height, int width) : this(height, width, false) {
         }
+        
+        public GameGrid(int height, int width, bool portalBorders) : this(new GridSize(height, width)) {
+            GridInitializer.InitializeGrid(Height, Width, portalBorders, SetItem);
+        }
 
-        public GameGrid(int height, int width, bool portalBorders) {
-            Height = Utility.VerifyValue(height, GameData.MinGridHeight, GameData.MaxGridHeight);
-            Width = Utility.VerifyValue(width, GameData.MinGridWidth, GameData.MaxGridWidth);
-            grid = new ICell[Height, Width];
-            capacity = (Height - 2) * (Width - 2);
-            grid = new ICell[Height, Width];
-            emptyCells = new HashSetIndexed();
-            GridInitializer.InitializeGrid(Height, Width, portalBorders, (point, cell) => SetItem(point, cell));
-            pointGenerator = new RandomPointGenerator(emptyCells);
-            syncHandler = new SyncSnakeHandler(SetItem);
+        public GameGrid(int height, int width, string data) : this(new GridSize(height, width, data.Length)) {
+            GridInitializer.ParseGrid(Height, Width, data, SetItem);
         }
 
         void SetItem(Point point, ICell item) {

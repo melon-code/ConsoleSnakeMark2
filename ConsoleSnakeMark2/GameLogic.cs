@@ -4,8 +4,6 @@ using System.Text;
 
 namespace ConsoleSnakeMark2 {
     public class GameLogic {
-        public const int SmallFoodValue = 1;
-        
         readonly Snake snake;
         readonly GameGrid grid;
         Direction currentSnakeDirection;
@@ -49,7 +47,7 @@ namespace ConsoleSnakeMark2 {
         }
 
         public void SpawnFood() {
-            grid.AddFoodRandomPlace(SmallFoodValue);
+            grid.AddFoodRandomPlace(GameData.SmallFoodValue);
         }
 
         public bool SpawnFood(Point point, int foodValue) {
