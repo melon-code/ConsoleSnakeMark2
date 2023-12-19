@@ -10,14 +10,14 @@ namespace ConsoleSnakeMark2Tests {
         [Test]
         public void NoFileTest() {
             const string path = @"\directory\file.txt";
-            Assert.Throws<ArgumentException>(() => new CustomGameGridDataFromFile(path), GameExceptions.WrongFilePath.Message);
+            Helper.AssertException(() => new CustomGameGridDataFromFile(path), GameExceptions.WrongFilePath.Message);
         }
 
         [Test]
         public void ParseFileTest() {
-            const string path = @"CustomGameGridTestFile.txt";
+            const string name = "CustomGameGridTestFile", folder = "CustomGameGridFile";
             const string expectedData = "BBBBBB      B  D BB    BB    BBPPPPB";
-            var data = new CustomGameGridDataFromFile(path);
+            var data = new CustomGameGridDataFromFile(Helper.GetFilePath(folder, name));
             Assert.AreEqual(10, data.Speed);
             Assert.AreEqual(6, data.Height);
             Assert.AreEqual(6, data.Width);

@@ -9,9 +9,9 @@ namespace ConsoleSnakeMark2 {
         Direction currentSnakeDirection;
         bool gameOver = false;
 
-        bool IsWin => grid.Capacity == snake.Length;
+        public bool IsWin => grid.Capacity == snake.Length;
         public GameGrid Grid => grid;
-        public int SnakeLenght => snake.Length;
+        public int SnakeLength => snake.Length;
         public int AteFood => snake.AteFood;
         public bool IsEnd => IsWin || gameOver;
         public Direction CurrentSnakeDirection {

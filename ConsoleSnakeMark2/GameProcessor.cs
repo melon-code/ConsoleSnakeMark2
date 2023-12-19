@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 using Keystroke.API;
 
 namespace ConsoleSnakeMark2 {
@@ -15,7 +16,10 @@ namespace ConsoleSnakeMark2 {
         readonly int interval;
         IConsoleDrawer drawer;
 
-        AdditionalDrawingData DrawingData => new AdditionalDrawingData(gameLogic.CurrentSnakeDirection, gameLogic.SnakeLenght, gameLogic.AteFood);
+        int SnakeLength => gameLogic.SnakeLength;
+        int AteFood => gameLogic.AteFood;
+        AdditionalDrawingData DrawingData => new AdditionalDrawingData(gameLogic.CurrentSnakeDirection, SnakeLength, AteFood);
+        public SnakeGameStats GameStats => new SnakeGameStats(gameLogic.IsWin, SnakeLength, AteFood);
 
         GameProcessor(GameGrid grid, Snake snake, int speed) {
             gameLogic = new GameLogic(grid, snake);
@@ -60,7 +64,7 @@ namespace ConsoleSnakeMark2 {
                         ChangeDirection(Direction.Right);
                         break;
                     case KeyCode.Escape:
-                        //Application.Exit();
+                        Application.Exit();
                         break;
                 }
             });
@@ -69,10 +73,10 @@ namespace ConsoleSnakeMark2 {
             GameLoop gameLoop = new GameLoop(interval, () => {
                 gameLogic.Iterate();
                 drawer.DrawGrid(DrawingData);
-                //if (gameLogic.IsEnd)
-                //    Application.Exit();
+                if (gameLogic.IsEnd)
+                    Application.Exit();
             });
-            //Application.Run();
+            Application.Run();
             gameLoop.Stop();
             drawer.ResetConsoleWindow();
         }

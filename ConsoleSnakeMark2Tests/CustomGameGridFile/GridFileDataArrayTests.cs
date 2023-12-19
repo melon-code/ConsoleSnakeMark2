@@ -32,7 +32,7 @@ namespace ConsoleSnakeMark2Tests {
         public void NoGridDataTest() {
             const string empty = "" + endLine;
             const string data = speedLine + empty + empty;
-            Assert.Throws<ArgumentException>(() => new GridFileDataArray(data));
+            Helper.AssertException(() => new GridFileDataArray(data), GameExceptions.NoGridInFile.Message);
         }
     }
 }

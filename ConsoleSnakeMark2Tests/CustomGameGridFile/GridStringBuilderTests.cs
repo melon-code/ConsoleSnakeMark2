@@ -30,7 +30,7 @@ namespace ConsoleSnakeMark2Tests {
         public void WrongWidthTest() {
             const int width = 4;
             GridStringBuilder builder = new GridStringBuilder();
-            Assert.Throws<ArgumentException>(() => builder.AddLine("123", width), GameExceptions.NotEqualLenght.Message);
+            Helper.AssertException(() => builder.AddLine("123", width), GameExceptions.NotEqualLenght.Message);
         }
     }
 }

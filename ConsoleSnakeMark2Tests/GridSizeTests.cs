@@ -17,7 +17,7 @@ namespace ConsoleSnakeMark2Tests {
 
         [Test]
         public void InvalidDataSizeTest() {
-            Assert.Throws<ArgumentException>(() => new GridSize(height, width, height), GameExceptions.WrongGridDataSize.Message);
+            Helper.AssertException(() => new GridSize(height, width, height), GameExceptions.WrongGridDataSize.Message);
         }
     }
 }
