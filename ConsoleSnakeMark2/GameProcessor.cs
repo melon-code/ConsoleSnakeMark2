@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
-using Keystroke.API;
 
 namespace ConsoleSnakeMark2 {
     class GameProcessor {
-        const int second = 1000;
+        const int baseSpeedValue = 1200;
         const int speedRatio = 100;
 
         static int SpeedToMs(int speed) {
-            return second - Utility.VerifyValue(speed, GameData.MinSpeed, GameData.MaxSpeed) * speedRatio;
+            return baseSpeedValue - Utility.VerifyValue(speed, GameData.MinSpeed, GameData.MaxSpeed) * speedRatio;
         }
 
         readonly GameLogic gameLogic;
@@ -31,6 +29,9 @@ namespace ConsoleSnakeMark2 {
             : this(new GameGrid(gridHeight, gridWidth, portalBorders), new Snake(initialSnakePosition), speed) {
         }
 
+        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, int speed) : this(gridHeight, gridWidth, portalBorders, GameData.DefaultSnakePosition(gridHeight, gridWidth), speed) {
+        }
+
         public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, Point initialSnakePosition) : this(gridHeight, gridWidth, portalBorders, initialSnakePosition, GameData.DefaultSpeed) {
         }
 
@@ -43,40 +44,17 @@ namespace ConsoleSnakeMark2 {
         public GameProcessor(ICustomGameGridData data) : this(new GameGrid(data.Height, data.Width, data.GridData), new Snake(data.InitialSnakePosition, data.InitialSnakeDirection), data.Speed) {
         }
 
-        void ChangeDirection(Direction direction) {
-            gameLogic.CurrentSnakeDirection = direction;
-        }
-
         public void StartGameLoop() {
-            using var keystroke = new KeystrokeAPI();
-            keystroke.CreateKeyboardHook((character) => {
-                switch (character.KeyCode) {
-                    case KeyCode.Up:
-                        ChangeDirection(Direction.Up);
-                        break;
-                    case KeyCode.Down:
-                        ChangeDirection(Direction.Down);
-                        break;
-                    case KeyCode.Left:
-                        ChangeDirection(Direction.Left);
-                        break;
-                    case KeyCode.Right:
-                        ChangeDirection(Direction.Right);
-                        break;
-                    case KeyCode.Escape:
-                        Application.Exit();
-                        break;
-                }
-            });
             drawer.SetConsoleWindow();
             drawer.DrawGrid(DrawingData);
             GameLoop gameLoop = new GameLoop(interval, () => {
                 gameLogic.Iterate();
                 drawer.DrawGrid(DrawingData);
                 if (gameLogic.IsEnd)
-                    Application.Exit();
+                    PlayerInputLoop.Stop();
             });
-            Application.Run();
+            gameLoop.Start();
+            PlayerInputLoop.Run((direction) => gameLogic.CurrentSnakeDirection = direction);
             gameLoop.Stop();
             drawer.ResetConsoleWindow();
         }

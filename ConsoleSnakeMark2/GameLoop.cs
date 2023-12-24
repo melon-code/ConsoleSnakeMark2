@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace ConsoleSnakeMark2 {
@@ -9,6 +10,7 @@ namespace ConsoleSnakeMark2 {
 
         public GameLoop(int timeBetweenIterations, Action iterationFunc) {
             timer = new Timer(timeBetweenIterations);
+            //timer.Elapsed += async (s, e) => await Task.Run(iterationFunc);
             timer.Elapsed += (s, e) => iterationFunc();
         }
 

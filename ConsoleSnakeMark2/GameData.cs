@@ -10,6 +10,8 @@ namespace ConsoleSnakeMark2 {
         public const int MaxGridWidth = 500;
         public const int MinSpeed = 1;
         public const int MaxSpeed = 10;
+        public const int DefaultHeight = 15;
+        public const int DefaultWidth = 15;
         public const int DefaultSpeed = 6;
         public const bool DefaultPortalBorders = false;
         public const bool ConsoleCursorVisibility = false;

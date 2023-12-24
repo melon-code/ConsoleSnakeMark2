@@ -8,7 +8,7 @@ namespace ConsoleSnakeMark2Tests {
         const string txtTag = ".txt";
 
         public static string GetFilePath(string folder, string fileName) {
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folder, fileName + txtTag);
+            return Utility.GetPath(folder, fileName) + txtTag;
         }
         
         public static void AssertException(TestDelegate code, string expectedMessage) {

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localization>
+  <dictionary lang="rus">
+    <onTitle>Да</onTitle>
+    <offTitle>Нет</offTitle>
+    <inputNumber>Введите число: </inputNumber>
+    <exit>Выход</exit>
+    <ng>Новая игра</ng>
+    <settings>Настройки</settings>
+    <changelang>Чтобы изменить язык нажмите</changelang>
+    <height>Высота</height>
+    <width>Ширина</width>
+    <pb>Портальные границы</pb>
+    <speed>Скорость</speed>
+    <iscg>Пользовательское поле</iscg>
+    <cgtypes>Тип пользовательского поля</cgtypes>
+    <setexit>Назад</setexit>
+    <repeat>Начать заново</repeat>
+    <tomainmenu>В главное меню</tomainmenu>
+    <win>Победа!</win>
+    <gg>Неудача, попробуйте снова!</gg>
+    <reslength>Длина змейки: {0}</reslength>
+    <resfood>Съедено: {0} шт.</resfood>
+  </dictionary>
+  <dictionary lang="eng">
+    <onTitle>On</onTitle>
+    <offTitle>Off</offTitle>
+    <inputNumber>Input number: </inputNumber>
+    <exit>Exit</exit>
+    <ng>New game</ng>
+    <changelang>To change languege press</changelang>
+    <settings>Settings</settings>
+    <height>Grid height</height>
+    <width>Grid width</width>
+    <pb>Portal borders</pb>
+    <speed>Speed</speed>
+    <iscg>Custom game grid</iscg>
+    <cgtypes>Custom game grid type</cgtypes>
+    <setexit>Back</setexit>
+    <repeat>Start again</repeat>
+    <tomainmenu>To main menu</tomainmenu>
+    <win>Congratulations! You WON!</win>
+    <gg>GAME OVER Try fortune next time!</gg>
+    <reslength>Your snake length is {0}</reslength>
+    <resfood>Food was eaten: {0}</resfood>
+  </dictionary>
+</localization>
