@@ -14,5 +14,9 @@ namespace ConsoleSnakeMark2Tests {
         public static void AssertException(TestDelegate code, string expectedMessage) {
             Assert.AreEqual(expectedMessage, Assert.Throws<ArgumentException>(code).Message);
         }
+
+        public static GameLogic CreateGameLogic(int height, int width) {
+            return new GameLogic(new GameGrid(height, width), new Snake(GameData.DefaultSnakePosition(height, width)));
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace ConsoleSnakeMark2Tests {
         public const int Width = 14;
 
         readonly GameLogic logic;
+        readonly GameIterator iterator;
         public static readonly Point Center = new Point(Height / 2, Width / 2);
 
         Snake Snake => GetValue<Snake>(snakeName);
@@ -20,6 +21,7 @@ namespace ConsoleSnakeMark2Tests {
 
         public GameLogicTestWrap(Point snakeHead, int gridHeight = Height, int gridWidth = Width, Direction snakeDirection = GameData.DefaultSnakeDirection) {
             logic = new GameLogic(new GameGrid(gridHeight, gridWidth), new Snake(snakeHead, snakeDirection));
+            iterator = new GameIterator(logic, GameData.DefaultAdditionalLogic);
         }
 
         public GameLogicTestWrap() : this(Center) {
@@ -44,7 +46,7 @@ namespace ConsoleSnakeMark2Tests {
 
         public void MoveSnakeWithCollision(Direction direction = Direction.Right) {
             logic.CurrentSnakeDirection = direction;
-            logic.Iterate();
+            iterator.Iterate();
         }
     }
 }

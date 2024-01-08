@@ -23,7 +23,7 @@ namespace ConsoleSnakeMark2 {
                 do {
                     GameSettings settings = menu.Settings;
                     GameProcessor processor = settings.CustomGrid ? new GameProcessor(GetCustomGrid(settings.CustomGridType)) :
-                        new GameProcessor(settings.Height, settings.Width, settings.PortalBorders, settings.Speed);
+                        new GameProcessor(settings.Height, settings.Width, settings.PortalBorders, settings.Speed, settings.BigFood);
                     processor.StartGameLoop();
                     EndMenu endMenu = new EndMenu(processor.GameStats);
                     endMenuResult = endMenu.ShowDialog();

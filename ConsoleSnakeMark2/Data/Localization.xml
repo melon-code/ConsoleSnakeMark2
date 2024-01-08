@@ -11,6 +11,7 @@
     <height>Высота</height>
     <width>Ширина</width>
     <pb>Портальные границы</pb>
+    <bf>Большая еда</bf>
     <speed>Скорость</speed>
     <iscg>Пользовательское поле</iscg>
     <cgtypes>Тип пользовательского поля</cgtypes>
@@ -33,6 +34,7 @@
     <height>Grid height</height>
     <width>Grid width</width>
     <pb>Portal borders</pb>
+    <bf>Spawn big food</bf>
     <speed>Speed</speed>
     <iscg>Custom game grid</iscg>
     <cgtypes>Custom game grid type</cgtypes>

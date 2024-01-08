@@ -3,6 +3,7 @@
         public const char Border = 'B';
         public const char PortalBorder = 'B';
         public const char SmallFood = 'o';
+        public const char BigFood = '0';
         public const char Empty = ' ';
         public const char Body = '#';
         public const char Head = '@';

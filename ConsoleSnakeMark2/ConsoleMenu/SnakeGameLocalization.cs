@@ -12,6 +12,7 @@ namespace ConsoleSnakeMark2 {
         public const string HeightKey = "height";
         public const string WidthKey = "width";
         public const string PortalBorderKey = "pb";
+        public const string BigFoodKey = "bf";
         public const string SpeedKey = "speed";
         public const string CustomGridKey = "iscg";
         public const string CustomGridTypeKey = "cgtypes";

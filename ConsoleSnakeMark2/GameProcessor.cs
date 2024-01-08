@@ -11,7 +11,8 @@ namespace ConsoleSnakeMark2 {
         }
 
         readonly GameLogic gameLogic;
-        readonly int interval;
+        readonly GameIterator iterator;
+        readonly int turnInterval;
         IConsoleDrawer drawer;
 
         int SnakeLength => gameLogic.SnakeLength;
@@ -19,17 +20,23 @@ namespace ConsoleSnakeMark2 {
         AdditionalDrawingData DrawingData => new AdditionalDrawingData(gameLogic.CurrentSnakeDirection, SnakeLength, AteFood);
         public SnakeGameStats GameStats => new SnakeGameStats(gameLogic.IsWin, SnakeLength, AteFood);
 
-        GameProcessor(GameGrid grid, Snake snake, int speed) {
+        GameProcessor(GameGrid grid, Snake snake, int speed, IList<IGameLogicUser> additionalTurnLogic) {
             gameLogic = new GameLogic(grid, snake);
-            interval = SpeedToMs(speed);
+            iterator = new GameIterator(gameLogic, additionalTurnLogic);
+            turnInterval = SpeedToMs(speed);
             drawer = new ConsoleDrawer(gameLogic.Grid);
         }
 
-        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, Point initialSnakePosition, int speed)
-            : this(new GameGrid(gridHeight, gridWidth, portalBorders), new Snake(initialSnakePosition), speed) {
+        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, Point initialSnakePosition, int speed, IList<IGameLogicUser> additionalTurnLogic) 
+            : this(new GameGrid(gridHeight, gridWidth, portalBorders), new Snake(initialSnakePosition), speed, additionalTurnLogic) {
         }
 
-        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, int speed) : this(gridHeight, gridWidth, portalBorders, GameData.DefaultSnakePosition(gridHeight, gridWidth), speed) {
+        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, Point initialSnakePosition, int speed)
+            : this(gridHeight, gridWidth, portalBorders, initialSnakePosition, speed, GameData.DefaultAdditionalLogic) {
+        }
+
+        public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, int speed, bool bigFood) 
+            : this(gridHeight, gridWidth, portalBorders, GameData.DefaultSnakePosition(gridHeight, gridWidth), speed, Utility.GetLogicList(bigFood)) {
         }
 
         public GameProcessor(int gridHeight, int gridWidth, bool portalBorders, Point initialSnakePosition) : this(gridHeight, gridWidth, portalBorders, initialSnakePosition, GameData.DefaultSpeed) {
@@ -41,14 +48,15 @@ namespace ConsoleSnakeMark2 {
         public GameProcessor(int gridHeight, int gridWidth) : this(gridHeight, gridWidth, GameData.DefaultPortalBorders) {
         }
 
-        public GameProcessor(ICustomGameGridData data) : this(new GameGrid(data.Height, data.Width, data.GridData), new Snake(data.InitialSnakePosition, data.InitialSnakeDirection), data.Speed) {
+        public GameProcessor(ICustomGameGridData data) 
+            : this(new GameGrid(data.Height, data.Width, data.GridData), new Snake(data.InitialSnakePosition, data.InitialSnakeDirection), data.Speed, GameData.DefaultAdditionalLogic) {
         }
 
         public void StartGameLoop() {
             drawer.SetConsoleWindow();
             drawer.DrawGrid(DrawingData);
-            GameLoop gameLoop = new GameLoop(interval, () => {
-                gameLogic.Iterate();
+            GameLoop gameLoop = new GameLoop(turnInterval, () => {
+                iterator.Iterate();
                 drawer.DrawGrid(DrawingData);
                 if (gameLogic.IsEnd)
                     PlayerInputLoop.Stop();

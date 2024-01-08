@@ -34,7 +34,9 @@
         }
 
         public static ICell CreateFood(int foodValue) {
-            return new FoodCell(foodValue);
+            if (foodValue == GameData.SmallFoodValue)
+                return new SmallFoodCell();
+            return new BigFoodCell(foodValue);
         }
     }
 }

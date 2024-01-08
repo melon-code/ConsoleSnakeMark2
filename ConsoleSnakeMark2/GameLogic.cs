@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace ConsoleSnakeMark2 {
@@ -11,6 +10,7 @@ namespace ConsoleSnakeMark2 {
 
         public bool IsWin => grid.Capacity == snake.Length;
         public GameGrid Grid => grid;
+        public Point NextTurn => snake.NextTurnHead;
         public int SnakeLength => snake.Length;
         public int AteFood => snake.AteFood;
         public bool IsEnd => IsWin || gameOver;
@@ -46,8 +46,12 @@ namespace ConsoleSnakeMark2 {
             snake.Eat(foodValue);
         }
 
+        public void SpawnFood(int value) {
+            grid.AddFoodRandomPlace(value);
+        }
+
         public void SpawnFood() {
-            grid.AddFoodRandomPlace(GameData.SmallFoodValue);
+            SpawnFood(GameData.SmallFoodValue);
         }
 
         public bool SpawnFood(Point point, int foodValue) {
@@ -59,11 +63,8 @@ namespace ConsoleSnakeMark2 {
             parameters.CreateCollisionBehavior(this).Execute();
         }
 
-        public void Iterate() {
-            if (!IsEnd) {
-                snake.SetNewHeadDirection(currentSnakeDirection);
-                ExecuteCollisionBehavior(snake.NextTurnHead);
-            }
+        public void SetCurrentDirection() {
+            snake.SetNewHeadDirection(currentSnakeDirection);
         }
     }
 }

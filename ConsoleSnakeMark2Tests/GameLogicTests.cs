@@ -83,7 +83,7 @@ namespace ConsoleSnakeMark2Tests {
             Direction initialDirection = Direction.Left;
             GameLogic logic = new GameLogic(new GameGrid(height, width), new Snake(GameLogicTestWrap.Center, initialDirection));
             logic.CurrentSnakeDirection = Direction.Right;
-            logic.Iterate();
+            logic.SetCurrentDirection();
             Assert.AreEqual(initialDirection, logic.CurrentSnakeDirection);
         }
     }

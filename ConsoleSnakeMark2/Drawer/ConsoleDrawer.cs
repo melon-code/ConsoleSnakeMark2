@@ -34,7 +34,8 @@ namespace ConsoleSnakeMark2 {
 
         void DrawLine(int line) {
             for (int j = 0; j < grid.Width; j++) {
-                switch (grid[line, j].Type) {
+                ICell cell = grid[line, j];
+                switch (cell.Type) {
                     case CellType.Empty:
                         DrawSymbol(DrawerData.Empty);
                         break;
@@ -45,7 +46,7 @@ namespace ConsoleSnakeMark2 {
                         DrawSymbol(DrawerData.PortalBorder);
                         break;
                     case CellType.Food:
-                        DrawSymbol(DrawerData.SmallFood);
+                        DrawSymbol(cell is SmallFoodCell ? DrawerData.SmallFood : DrawerData.BigFood);
                         break;
                     case CellType.SnakeHead:
                         DrawHead();

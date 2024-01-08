@@ -15,6 +15,7 @@ namespace ConsoleSnakeMark2 {
                 new IntMenuItem(key[SnakeGameLocalization.HeightKey], GameData.DefaultHeight, GameData.MinConsoleHeight, GameData.MaxConsoleHeight),
                 new IntMenuItem(key[SnakeGameLocalization.WidthKey], GameData.DefaultWidth, GameData.MinConsoleWidth, GameData.MaxConsoleWidth),
                 new BoolMenuItem(key[SnakeGameLocalization.PortalBorderKey], GameData.DefaultPortalBorders),
+                new BoolMenuItem(key[SnakeGameLocalization.BigFoodKey], GameData.DefaultBigFood),
                 new IntMenuItem(key[SnakeGameLocalization.SpeedKey], GameData.DefaultSpeed, GameData.MinSpeed, GameData.MaxSpeed),
                 new DependencyBoolMenuItem(key[SnakeGameLocalization.CustomGridKey], isCustomGrid, new List<DependencyItem>() { new DependencyItem(CustomGrids) }), CustomGrids,
                 new ExitItem(key[SnakeGameLocalization.SettingsExitKey])

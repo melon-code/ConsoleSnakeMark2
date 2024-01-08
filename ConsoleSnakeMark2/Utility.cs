@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ConsoleSnakeMark2 {
@@ -13,6 +14,10 @@ namespace ConsoleSnakeMark2 {
 
         public static string GetPath(string folder, string fileName) {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folder, fileName);
+        }
+
+        public static IList<IGameLogicUser> GetLogicList(bool bigFood) {
+            return bigFood ? new List<IGameLogicUser>() { new BigFoodSpawner() } : GameData.DefaultAdditionalLogic;
         }
     }
 }
